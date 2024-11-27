@@ -32,3 +32,8 @@ class ProductFactory(factory.Factory):
 
     id = factory.Sequence(lambda n: n)
    ## Add code to create Fake Products 
+    name = factory.Faker("name")
+    description = factory.Faker("sentence")
+    price = factory.Faker("random_number")
+    available = factory.FuzzyChoice(choices=[True, False])
+    category = factory.LazyFunction(lambda: fake.enum(Category))
