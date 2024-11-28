@@ -35,6 +35,8 @@ DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
 )
 
+logger = logging.getLogger("flask.app")
+
 
 ######################################################################
 #  P R O D U C T   M O D E L   T E S T   C A S E S
@@ -104,3 +106,16 @@ class TestProductModel(unittest.TestCase):
     #
     # ADD YOUR TEST CASES HERE
     #
+    def test_read_a_product(self):
+        """It should Read a product from the database"""
+        product = ProductFactory()
+        logger.info("Product Name: %s", product.name)
+        product.id = None
+        product.create()
+        self.assertIsNotNone(product.id)
+        db_product = product.find(product.id)
+        self.assertEqual(db_product.name, product.name)
+        self.assertEqual(db_product.description, product.description)
+        self.assertEqual(Decimal(db_product.price), product.price)
+        self.assertEqual(db_product.available, product.available)
+        self.assertEqual(db_product.category, product.category)
