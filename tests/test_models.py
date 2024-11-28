@@ -119,3 +119,70 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(Decimal(db_product.price), product.price)
         self.assertEqual(db_product.available, product.available)
         self.assertEqual(db_product.category, product.category)
+
+    def test_update_a_product(self):
+        """It should Update a Product from the database"""
+        product = ProductFactory()
+        logger.info("Product Name: %s", product.name)
+
+        product.id = None
+        product.create()
+        logger.info("Product Name after creation: %s", product.name)
+
+        product.description = "Test Description"
+        self.assertEqual(product.description, "Test Description")
+        self.assertIsNotNone(product.id)
+
+        products = Product.all()
+        self.assertEqual(len(products), 1)
+
+        updated_product = products[0]
+        self.assertEqual(updated_product.id, product.id)
+        self.assertEqual(updated_product.description, product.description)
+
+    def test_delete_a_product(self):
+        """It should Delete a Product from the database"""
+        product = ProductFactory()
+        product.id = None
+        product.create()
+        
+        products = Product.all()
+        self.assertEqual(len(products), 1)
+
+        product.delete()
+        products = Product.all()
+        self.assertEqual(len(products), 0)
+
+    def test_list_all_products(self):
+        """It should List all Products from the database"""
+        products = Product.all()
+        self.assertEqual(len(products), 0)
+
+        for i in range(1,6):
+            product = ProductFactory()
+            product.Id = None
+            product.create()
+
+        products = Product.all()
+        self.assertEqual(len(products), 5)
+
+    def test_find_product_by_name(self):
+        """It should Find Products by Name from the database"""
+        for i in range(1,6):
+            product = ProductFactory()
+            product.Id = None
+            product.create()
+
+        products = Product.all()
+        first_product = products[0]
+
+        occurrences = 0
+        for i in range(0,5):
+            if first_product.name == products[i].name:
+                occurrences += 1
+
+        products_with_same_name = product.find_by_name(first_product.name)
+        self.assertEqual(products_with_same_name.count(), occurrences)
+
+        for i in range(0, products_with_same_name.count()):
+            self.assertEqual(products_with_same_name[i].name, first_product.name)
