@@ -151,14 +151,13 @@ class TestProductModel(unittest.TestCase):
 
         with self.assertRaises(DataValidationError):
             product.update()
-        
 
     def test_delete_a_product(self):
         """It should Delete a Product from the database"""
         product = ProductFactory()
         product.id = None
         product.create()
-        
+
         products = Product.all()
         self.assertEqual(len(products), 1)
 
@@ -171,7 +170,7 @@ class TestProductModel(unittest.TestCase):
         products = Product.all()
         self.assertEqual(len(products), 0)
 
-        for i in range(1,6):
+        for i in range(1, 6):
             product = ProductFactory()
             product.Id = None
             product.create()
@@ -181,7 +180,7 @@ class TestProductModel(unittest.TestCase):
 
     def test_find_product_by_name(self):
         """It should Find Products by Name from the database"""
-        for i in range(1,6):
+        for i in range(1, 6):
             product = ProductFactory()
             product.Id = None
             product.create()
@@ -190,7 +189,7 @@ class TestProductModel(unittest.TestCase):
         first_product = products[0]
 
         occurrences = 0
-        for i in range(0,5):
+        for i in range(0, 5):
             if first_product.name == products[i].name:
                 occurrences += 1
 
@@ -202,7 +201,7 @@ class TestProductModel(unittest.TestCase):
 
     def test_find_product_by_availability(self):
         """It should Find Products by Availability from the database"""
-        for i in range(1,11):
+        for i in range(1, 11):
             product = ProductFactory()
             product.Id = None
             product.create()
@@ -211,7 +210,7 @@ class TestProductModel(unittest.TestCase):
         first_product = products[0]
 
         occurrences = 0
-        for i in range(0,10):
+        for i in range(0, 10):
             if first_product.available == products[i].available:
                 occurrences += 1
 
@@ -223,7 +222,7 @@ class TestProductModel(unittest.TestCase):
 
     def test_find_product_by_category(self):
         """It should Find Products by Category from the database"""
-        for i in range(1,11):
+        for i in range(1, 11):
             product = ProductFactory()
             product.Id = None
             product.create()
@@ -232,7 +231,7 @@ class TestProductModel(unittest.TestCase):
         first_product = products[0]
 
         occurrences = 0
-        for i in range(0,10):
+        for i in range(0, 10):
             if first_product.category == products[i].category:
                 occurrences += 1
 
@@ -241,3 +240,55 @@ class TestProductModel(unittest.TestCase):
 
         for i in range(0, products_with_same_category.count()):
             self.assertEqual(products_with_same_category[i].category, first_product.category)
+
+    def test_invalid_available_data_type_in_deserialize_(self):
+        """It should throw exception for invalid available data type"""
+        product = ProductFactory()
+        product.Id = None
+        product.create()
+
+        product.available = 10
+        with self.assertRaises(DataValidationError):
+            product.deserialize(product)
+
+    def test_find_product_by_price(self):
+        """It should Find Products by Price from the database"""
+        for i in range(1, 11):
+            product = ProductFactory()
+            product.Id = None
+            product.create()
+
+        products = Product.all()
+        first_product = products[0]
+
+        occurrences = 0
+        for i in range(0, 10):
+            if first_product.price == products[i].price:
+                occurrences += 1
+
+        products_with_same_price = product.find_by_price(first_product.price)
+        self.assertEqual(products_with_same_price.count(), occurrences)
+
+        for i in range(0, products_with_same_price.count()):
+            self.assertEqual(products_with_same_price[i].price, first_product.price)
+
+    def test_find_product_by_price_string(self):
+        """It should Find Products by Price string from the database"""
+        for i in range(1, 11):
+            product = ProductFactory()
+            product.Id = None
+            product.create()
+
+        products = Product.all()
+        first_product = products[0]
+
+        occurrences = 0
+        for i in range(0, 10):
+            if first_product.price == products[i].price:
+                occurrences += 1
+
+        products_with_same_price = product.find_by_price(str(first_product.price))
+        self.assertEqual(products_with_same_price.count(), occurrences)
+
+        for i in range(0, products_with_same_price.count()):
+            self.assertEqual(products_with_same_price[i].price, first_product.price)

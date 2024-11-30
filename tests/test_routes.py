@@ -166,6 +166,10 @@ class TestProductRoutes(TestCase):
     #
     # ADD YOUR TEST CASES HERE
     #
+    def test_method_not_allowed(self):
+        """It should not allow HEAD"""
+        response = self.client.head(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     ######################################################################
     # Utility functions
