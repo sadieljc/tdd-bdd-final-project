@@ -186,3 +186,45 @@ class TestProductModel(unittest.TestCase):
 
         for i in range(0, products_with_same_name.count()):
             self.assertEqual(products_with_same_name[i].name, first_product.name)
+
+    def test_find_product_by_availability(self):
+        """It should Find Products by Availability from the database"""
+        for i in range(1,11):
+            product = ProductFactory()
+            product.Id = None
+            product.create()
+
+        products = Product.all()
+        first_product = products[0]
+
+        occurrences = 0
+        for i in range(0,10):
+            if first_product.available == products[i].available:
+                occurrences += 1
+
+        products_with_same_availability = product.find_by_availability(first_product.available)
+        self.assertEqual(products_with_same_availability.count(), occurrences)
+
+        for i in range(0, products_with_same_availability.count()):
+            self.assertEqual(products_with_same_availability[i].available, first_product.available)
+
+    def test_find_product_by_category(self):
+        """It should Find Products by Category from the database"""
+        for i in range(1,11):
+            product = ProductFactory()
+            product.Id = None
+            product.create()
+
+        products = Product.all()
+        first_product = products[0]
+
+        occurrences = 0
+        for i in range(0,10):
+            if first_product.category == products[i].category:
+                occurrences += 1
+
+        products_with_same_category = product.find_by_category(first_product.category)
+        self.assertEqual(products_with_same_category.count(), occurrences)
+
+        for i in range(0, products_with_same_category.count()):
+            self.assertEqual(products_with_same_category[i].category, first_product.category)
