@@ -171,6 +171,28 @@ class TestProductRoutes(TestCase):
         response = self.client.head(BASE_URL)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
+    # ----------------------------------------------------------
+    # TEST GET
+    # ----------------------------------------------------------
+    def test_get_product(self):
+        """It should get a Product by its Id"""
+        test_product = self._create_products()[0]
+        response = self.client.get(BASE_URL + "/" + str(test_product.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check the data is correct
+        product = response.get_json()
+        self.assertEqual(product["name"], test_product.name)
+        self.assertEqual(product["description"], test_product.description)
+        self.assertEqual(Decimal(product["price"]), test_product.price)
+        self.assertEqual(product["available"], test_product.available)
+        self.assertEqual(product["category"], test_product.category.name)
+
+    def test_get_product_not_found(self):
+        """It should not find Product by its Id"""
+        response = self.client.get(BASE_URL + "/1")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
     ######################################################################
     # Utility functions
     ######################################################################
