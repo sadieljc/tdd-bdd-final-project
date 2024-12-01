@@ -170,7 +170,7 @@ class TestProductModel(unittest.TestCase):
         products = Product.all()
         self.assertEqual(len(products), 0)
 
-        for i in range(1, 6):
+        for _ in range(1, 6):
             product = ProductFactory()
             product.Id = None
             product.create()
@@ -180,7 +180,7 @@ class TestProductModel(unittest.TestCase):
 
     def test_find_product_by_name(self):
         """It should Find Products by Name from the database"""
-        for i in range(1, 6):
+        for _ in range(1, 6):
             product = ProductFactory()
             product.Id = None
             product.create()
@@ -201,7 +201,7 @@ class TestProductModel(unittest.TestCase):
 
     def test_find_product_by_availability(self):
         """It should Find Products by Availability from the database"""
-        for i in range(1, 11):
+        for _ in range(1, 11):
             product = ProductFactory()
             product.Id = None
             product.create()
@@ -222,7 +222,7 @@ class TestProductModel(unittest.TestCase):
 
     def test_find_product_by_category(self):
         """It should Find Products by Category from the database"""
-        for i in range(1, 11):
+        for _ in range(1, 11):
             product = ProductFactory()
             product.Id = None
             product.create()
@@ -253,7 +253,7 @@ class TestProductModel(unittest.TestCase):
 
     def test_find_product_by_price(self):
         """It should Find Products by Price from the database"""
-        for i in range(1, 11):
+        for _ in range(1, 11):
             product = ProductFactory()
             product.Id = None
             product.create()
@@ -274,7 +274,7 @@ class TestProductModel(unittest.TestCase):
 
     def test_find_product_by_price_string(self):
         """It should Find Products by Price string from the database"""
-        for i in range(1, 11):
+        for _ in range(1, 11):
             product = ProductFactory()
             product.Id = None
             product.create()
