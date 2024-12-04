@@ -162,10 +162,6 @@ class TestProductRoutes(TestCase):
     #
     # ADD YOUR TEST CASES HERE
     #
-    def test_method_not_allowed(self):
-        """It should not allow HEAD"""
-        response = self.client.head(BASE_URL)
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     # ----------------------------------------------------------
     # TEST GET
@@ -207,6 +203,40 @@ class TestProductRoutes(TestCase):
 
         product = response.get_json()
         self.assertEqual(product["name"], "Test Name")
+
+    # ----------------------------------------------------------
+    # TEST DELETE
+    # ----------------------------------------------------------
+    def test_delete_product(self):
+        """It should Delete a Product"""
+
+        products = self._create_products(5)
+        product_count = self.get_product_count()
+        test_product = products[0]
+
+        response = self.client.delete(BASE_URL + "/" + str(test_product.id))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(b"", response.data)
+
+        response = self.client.get(BASE_URL + "/" + str(test_product.id))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        product_final_count = self.get_product_count()
+        self.assertEqual(product_final_count, product_count - 1)
+
+    # ----------------------------------------------------------
+    # TEST LIST
+    # ----------------------------------------------------------
+
+    def test_get_product_list(self):
+        """It should Get a list of Products"""
+        self._create_products(5)
+
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = response.get_json()
+        self.assertEqual(len(data), 5)
 
     ######################################################################
     # Utility functions

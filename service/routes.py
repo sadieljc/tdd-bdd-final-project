@@ -94,17 +94,23 @@ def create_products():
 # L I S T   A L L   P R O D U C T S
 ######################################################################
 
-#
-# PLACE YOUR CODE TO LIST ALL PRODUCTS HERE
-#
+@app.route("/products", methods=["GET"])
+def list_products():
+    """
+    Get all Products
+    This endpoint will get all Products
+    """
+    app.logger.info("Request to Get all Products...")
+    products = Product.all()
+
+    product_response = [product.serialize() for product in products]
+
+    return product_response, status.HTTP_200_OK
+
 
 ######################################################################
 # R E A D   A   P R O D U C T
 ######################################################################
-
-#
-# PLACE YOUR CODE HERE TO READ A PRODUCT
-#
 
 @app.route("/products/<product_id>", methods=["GET"])
 def get_products(product_id):
@@ -124,15 +130,12 @@ def get_products(product_id):
 
     message = product.serialize()
 
-    return jsonify(message), status.HTTP_200_OK
+    return message, status.HTTP_200_OK
+
 
 ######################################################################
 # U P D A T E   A   P R O D U C T
 ######################################################################
-
-#
-# PLACE YOUR CODE TO UPDATE A PRODUCT HERE
-#
 
 @app.route("/products/<product_id>", methods=["PUT"])
 def update_products(product_id):
@@ -158,11 +161,28 @@ def update_products(product_id):
 
     return product.serialize(), status.HTTP_200_OK
 
+
 ######################################################################
 # D E L E T E   A   P R O D U C T
 ######################################################################
 
+@app.route("/products/<product_id>", methods=["DELETE"])
+def delete_product(product_id):
+    """
+    Delete a Product
+    This endpoint will delete a Product
+    """
+    app.logger.info("Request to Delete a Product...")
 
-#
-# PLACE YOUR CODE TO DELETE A PRODUCT HERE
-#
+    product = Product.find(product_id)
+
+    if product is None:
+        app.logger.error("Product not found.")
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Product Id not found {product_id}"
+        )
+
+    product.delete()
+
+    return "", status.HTTP_204_NO_CONTENT
