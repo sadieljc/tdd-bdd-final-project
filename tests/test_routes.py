@@ -258,6 +258,31 @@ class TestProductRoutes(TestCase):
         for product in data:
             self.assertEqual(product["name"], test_name)
 
+    def test_query_by_category(self):
+        """It should Query Products by category"""
+        products = self._create_products(10)
+
+        category = products[0].category
+
+        found = []
+        for product in products:
+            if product.category == category:
+                found.append(product)
+
+        for product in found:
+            self.assertEqual(product.category, category)
+
+        found_count = len(found)
+
+        response = self.client.get(BASE_URL, query_string=f"category={quote_plus(str(category.name))}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = response.get_json()
+        self.assertEqual(len(data), found_count)
+
+        for product in data:
+            self.assertEqual(product["category"], category.name)
+
     ######################################################################
     # Utility functions
     ######################################################################
