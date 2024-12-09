@@ -61,7 +61,7 @@ Scenario: Update a Product
     And I press the "Search" button
     Then I should see the message "Success"
     And I should see "Shoes" in the "Name" field
-    And I set the "Name" to "Tennis"
+    When I set the "Name" to "Tennis"
     And I press the "Update" button
     Then I should see the message "Success"
     When I copy the "Id" field
