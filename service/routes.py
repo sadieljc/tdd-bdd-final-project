@@ -84,9 +84,8 @@ def str_to_bool(str_value):
 
     try:
         return bool_map[str_value.lower()]
-    except KeyError:
-        raise ValueError(f"Cannot convert {str_value} to a boolean")
-        raise
+    except KeyError as exc:
+        raise ValueError(f"Cannot convert {str_value} to a boolean") from exc
 
 
 ######################################################################
