@@ -65,6 +65,30 @@ def check_content_type(content_type):
     )
 
 
+def str_to_bool(str_value):
+    """
+    Map string to bool
+    """
+    bool_map = {
+        'true': True,
+        '1': True,
+        't': True,
+        'y': True,
+        'yes': True,
+        'false': False,
+        '0': False,
+        'f': False,
+        'n': False,
+        'no': False
+    }
+
+    try:
+        return bool_map[str_value.lower()]
+    except KeyError:
+        raise ValueError(f"Cannot convert {str_value} to a boolean")
+        raise
+
+
 ######################################################################
 # C R E A T E   A   N E W   P R O D U C T
 ######################################################################
@@ -108,10 +132,15 @@ def list_products():
     category = request.args.get("category")
     app.logger.info(f"category={category}")
 
-    if name is not None:
+    available = request.args.get("available")
+    app.logger.info(f"available={available}")
+
+    if name:
         products = Product.find_by_name(name)
-    elif category is not None:
+    elif category:
         products = Product.find_by_category(getattr(Category, category.upper()))
+    elif available:
+        products = Product.find_by_availability(str_to_bool(available))
     else:
         products = Product.all()
 
