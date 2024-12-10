@@ -306,6 +306,13 @@ class TestProductRoutes(TestCase):
         for product in data:
             self.assertTrue(product["available"])
 
+    def test_query_by_availability_exception(self):
+        """It should Query Products by availability and throw exception"""
+        with self.assertRaises(ValueError) as context:
+            _ = self.client.get(BASE_URL + "?available=truuue")
+
+        self.assertEqual(str(context.exception), "Cannot convert truuue to a boolean")
+
     ######################################################################
     # Utility functions
     ######################################################################
